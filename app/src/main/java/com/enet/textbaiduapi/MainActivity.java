@@ -36,9 +36,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //获取token
         initIntent();
 
+        //初始化控件
+        initView();
+
+
+    }
+
+    private void initView() {
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -62,14 +69,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void captureSuccess(Bitmap bitmap) {
                 s = convertIconToString(bitmap);
+
+                //获取到拍照成功后返回的Bitmap
+
+
+                //这个文字识别是百度api集市的
                 //  ocr();
 
-                //x新的文字识别
+                //这个文字识别是百度云的
 
                 ocr2(s);
 
 
-                //获取到拍照成功后返回的Bitmap
             }
 
             @Override
@@ -78,48 +89,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
-    private void ocr2(String s) {
-
-
-        OkHttpClient mOkHttpClient = new OkHttpClient();
-        RequestBody formBody = new FormBody.Builder()
-
-                .add("access_token", str)
-                .add("image", "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDABMNDxEPDBMREBEWFRMXHTAfHRsbHTsqLSMwRj5KSUU+RENNV29eTVJpU0NEYYRiaXN3fX59S12Jkoh5kW96fXj/2wBDARUWFh0ZHTkfHzl4UERQeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHj/wAARCAAfACEDAREAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAQDBQb/xAAjEAACAgICAgEFAAAAAAAAAAABAgADBBESIRMxBSIyQXGB/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/APawEBAQEBAgy8i8ZTVV3UY6V1eU2XoWDDZB19S646Gz39w9fkKsW1r8Wm2yo1PYis1be0JG9H9QNYCAgc35Cl3yuVuJZl0cB41rZQa32dt2y6OuOiOxo61vsLcVblxaVyXD3hFFjL6La7I/sDWAgICAgICB/9k=")
-                .build();
-        Request request = new Request.Builder()
-                .url("https://aip.baidubce.com/rest/2.0/ocr/v1/general")
-                .post(formBody)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .build();
-        Call call = mOkHttpClient.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String str2 = response.body().string();
-                Log.i("ocrzq", str2);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-        });
-
-
-    }
-
+    /**
+     * 获取token
+     */
     private void initIntent() {
 
         OkHttpClient mOkHttpClient = new OkHttpClient();
@@ -145,16 +119,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 str = response.body().string();
-                 Log.i("zqNew", str);
+                Log.i("zqNew", str);
             }
         });
 
 
     }
 
+
+    /**
+     * 这个方法是api集市的
+     */
+
     private void ocr() {
         //s="/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDABMNDxEPDBMREBEWFRMXHTAfHRsbHTsqLSMwRj5KSUU+RENNV29eTVJpU0NEYYRiaXN3fX59S12Jkoh5kW96fXj/2wBDARUWFh0ZHTkfHzl4UERQeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHj/wAARCAAfACEDAREAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAQDBQb/xAAjEAACAgICAgEFAAAAAAAAAAABAgADBBESIRMxBSIyQXGB/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/APawEBAQEBAgy8i8ZTVV3UY6V1eU2XoWDDZB19S646Gz39w9fkKsW1r8Wm2yo1PYis1be0JG9H9QNYCAgc35Cl3yuVuJZl0cB41rZQa32dt2y6OuOiOxo61vsLcVblxaVyXD3hFFjL6La7I/sDWAgICAgICB/9k=";
-
 
         OkHttpClient mOkHttpClient = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
@@ -196,6 +174,49 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 这个方法 是百度云文字识别
+     *
+     * @param s
+     */
+    private void ocr2(String s) {
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+
+                .add("access_token", str)
+                .add("image", "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDABMNDxEPDBMREBEWFRMXHTAfHRsbHTsqLSMwRj5KSUU+RENNV29eTVJpU0NEYYRiaXN3fX59S12Jkoh5kW96fXj/2wBDARUWFh0ZHTkfHzl4UERQeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHj/wAARCAAfACEDAREAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAQDBQb/xAAjEAACAgICAgEFAAAAAAAAAAABAgADBBESIRMxBSIyQXGB/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/APawEBAQEBAgy8i8ZTVV3UY6V1eU2XoWDDZB19S646Gz39w9fkKsW1r8Wm2yo1PYis1be0JG9H9QNYCAgc35Cl3yuVuJZl0cB41rZQa32dt2y6OuOiOxo61vsLcVblxaVyXD3hFFjL6La7I/sDWAgICAgICB/9k=")
+                .build();
+        Request request = new Request.Builder()
+                .url("https://aip.baidubce.com/rest/2.0/ocr/v1/general")
+                .post(formBody)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String str2 = response.body().string();
+                Log.i("ocrzq", str2);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+        });
+
+
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -207,6 +228,13 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         mJCameraView.onPause();
     }
+
+    /**
+     * 这个方法是把bitmap转化成base64的字符串
+     *
+     * @param bitmap
+     * @return
+     */
 
     public static String convertIconToString(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
